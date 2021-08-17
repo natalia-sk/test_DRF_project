@@ -1,22 +1,19 @@
 from django.db import models
+from utils.constants import LanguagesChoices
 
 
 class Course(models.Model):
-    LANGUAGE_CHOICE = (
-        ("en", "English"),
-        ("ru", "Russian"),
-        ("de", "German"),
-        ("fr", "French")
-    )
-
     title = models.CharField(max_length=150)
-    video_duration = models.PositiveIntegerField()
+    video_duration = models.PositiveIntegerField(help_text="in seconds")
     language = models.CharField(
         max_length=10,
-        choices=LANGUAGE_CHOICE, default="en")
+        choices=LanguagesChoices.choices, default="en")
 
 
 class Episode(models.Model):
     title = models.CharField(max_length=150)
     video_url = models.URLField(max_length=200)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="episodes")

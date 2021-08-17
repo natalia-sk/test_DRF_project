@@ -9,8 +9,8 @@ class EpisodeSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    episode_set = EpisodeSerializer(many=True, read_only=True)
+    episodes = EpisodeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ["url", "id", "title", "video_duration", "language", "episode_set"]
+        fields = ["url", "id", "title", "video_duration", "language", "episodes"]
