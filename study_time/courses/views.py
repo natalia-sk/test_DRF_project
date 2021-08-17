@@ -6,13 +6,9 @@ from .serializers import CourseSerializer, EpisodeSerializer
 
 class EpisodeViewSet(viewsets.ModelViewSet):
     serializer_class = EpisodeSerializer
-
-    def get_queryset(self):
-        return Episode.objects.all()
+    queryset = Episode.objects.all()
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
-
-    def get_queryset(self):
-        return Course.objects.all()
+    queryset = Course.objects.all()
