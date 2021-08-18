@@ -2,7 +2,7 @@ from django.db.models import TextChoices
 
 
 class LanguagesChoices(TextChoices):
-    EN = "English"
-    RU = "Russian"
-    DE = "German"
-    FR = "French"
+    ENGLISH = ("en", "English")
+    RUSSIAN = ("ru", "Russian")
+    GERMAN = ("de", "German")
+    FRENCH = ("fr", "French")
