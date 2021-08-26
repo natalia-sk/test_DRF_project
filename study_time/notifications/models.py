@@ -12,3 +12,6 @@ class Notification(models.Model):
     content_type = models.CharField(
         choices=ContentTypeChoices.choices,
         max_length=10)
+    article = models.ForeignKey("articles.Article", on_delete=models.CASCADE, null=True)
+    course = models.ForeignKey("courses.Course", on_delete=models.CASCADE, null=True)
+    episode = models.ForeignKey("courses.Episode", on_delete=models.CASCADE, null=True)
