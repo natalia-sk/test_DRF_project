@@ -1,6 +1,8 @@
+from articles.views import ArticleViewSet
 import pytest
 import re
 from django.db.utils import DataError
+from rest_framework.test import APIClient
 
 from .factories import ArticleFactory
 from articles.models import Article
@@ -18,6 +20,16 @@ def test_article(user_fixture):
     # THEN
     assert request.status_code == 200
     assert request.data == {"id": article.id, "title": article.title, "content": article.content}
+
+
+@pytest.mark.django_db
+def test_unauthenticated_user_cannot_access_articles_view(user_fixture):
+    # GIVEN
+    client = APIClient(user_fixture)
+    # WHEN
+    request = client.get('/articles/articles')
+    # THEN
+    assert request.status_code == 403
 
 
 def test_serializer_contains_expected_fields():
