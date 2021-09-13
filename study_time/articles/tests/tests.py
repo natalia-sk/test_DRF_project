@@ -1,6 +1,9 @@
 import pytest
+import re
+from django.db.utils import DataError
 
 from .factories import ArticleFactory
+from articles.models import Article
 from articles.serializers import ArticleSerializer
 from tests.utils import get_client
 
@@ -24,3 +27,11 @@ def test_serializer_contains_expected_fields():
     serializer_fields = serializer.fields
     # THEN
     assert set(serializer_fields.keys()) == set(['id', 'title', 'content'])
+
+
+@pytest.mark.django_db
+def test_article_model_raises_exception():
+    # THEN
+    with pytest.raises(DataError, match=re.escape("value too long for type character varying(150)")):
+        # WHEN
+        Article.objects.create(title=f"{'test' * 150}", content="test content")
