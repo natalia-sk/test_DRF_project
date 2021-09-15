@@ -5,6 +5,3 @@ from factory import django
 class UserFactory(django.DjangoModelFactory):
     class Meta:
         model = User
-
-    username = "test_user"
-    password = "test_password"
