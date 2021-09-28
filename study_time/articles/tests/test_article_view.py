@@ -1,7 +1,5 @@
 import pytest
 
-from django.urls import reverse
-
 from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework.permissions import IsAuthenticated
@@ -22,14 +20,14 @@ def test_article_view_permission_classes():
 
 
 @pytest.mark.django_db
-def test_authenticated_user_can_access_article_details(user_fixture, article_fixture):
+def test_article_detail(user_fixture, article_fixture):
 
     # GIVEN
     article = Article.objects.get()
     client = get_client(user_fixture)
 
     # WHEN
-    request = client.get(reverse("articles-detail", kwargs={"pk": values.ARTICLE_ID}))
+    request = client.get(values.ARTICLE_DETAIL_PATH)
 
     # THEN
     assert request.status_code == status.HTTP_200_OK
@@ -43,7 +41,7 @@ def test_unauthenticated_user_cannot_access_articles_view(user_fixture):
     client = APIClient(user_fixture)
 
     # WHEN
-    request = client.get(reverse("articles-list"))
+    request = client.get(values.ARTICLES_LIST_PATH)
 
     # THEN
     assert request.status_code == status.HTTP_403_FORBIDDEN
@@ -54,24 +52,14 @@ def test_create_article(user_fixture):
 
     # GIVEN
     client = get_client(user_fixture)
-    data = {
-        "title": "test article title",
-        "content": "test article content"
-    }
+    data = values.DATA_NEW_ARTICLE
 
     # WHEN
-    response = client.post(path=reverse("articles-list"), data=data, format="json")
-    response_data = response.json()
-    article = Article.objects.get()
-    expected_data = {
-        "id": article.id, 
-        "title": article.title, 
-        "content": article.content
-        }
+    response = client.post(path=values.ARTICLES_LIST_PATH, data=data, format="json")
 
     # THEN
     assert response.status_code == status.HTTP_201_CREATED
-    assert response_data == expected_data
+    assert response.json() == values.NEW_ARTICLE_RESPONSE
 
 
 @pytest.mark.django_db
@@ -81,12 +69,11 @@ def test_list_articles(user_fixture, three_articles_fixture):
     client = get_client(user_fixture)
 
     # WHEN
-    response = client.get(reverse("articles-list"))
-    response_data = response.json()
+    response = client.get(values.ARTICLES_LIST_PATH)
 
     # THEN
     assert response.status_code == status.HTTP_200_OK
-    assert response_data == values.ARTICLES_RESPONSE
+    assert response.json() == values.ARTICLES_RESPONSE
 
 
 @pytest.mark.django_db
@@ -94,30 +81,18 @@ def test_update_articles(user_fixture, article_fixture):
 
     # GIVEN
     client = get_client(user_fixture)
-    article = article_fixture
-    new_data = {
-        "title": "test new article title",
-        "content": "test new article content"
-    }
+    new_data = values.DATA_CHANGED_ARTICLE
 
     # WHEN
     response = client.put(
-        path=reverse("articles-detail", kwargs={"pk": values.ARTICLE_ID}), 
+        path=values.ARTICLE_DETAIL_PATH, 
         data=new_data, 
         format="json"
         )
-    response_data = response.json()
-    
-    changed_article = Article.objects.get()
-    expected_changed_data = {
-        "id": changed_article.id, 
-        "title": changed_article.title, 
-        "content": changed_article.content
-        }
 
     # THEN
     assert response.status_code == status.HTTP_200_OK
-    assert response_data == expected_changed_data
+    assert response.json() == values.ARTICLE_UPDATE_RESPONSE
 
 
 @pytest.mark.django_db
@@ -127,7 +102,7 @@ def test_delete_articles(user_fixture, article_fixture):
     client = get_client(user_fixture)
 
     # WHEN
-    response = client.delete(path=reverse("articles-detail", kwargs={"pk": values.ARTICLE_ID}))
+    response = client.delete(path=values.ARTICLE_DETAIL_PATH)
 
     # THEN
     assert response.status_code == status.HTTP_204_NO_CONTENT
