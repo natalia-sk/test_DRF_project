@@ -50,3 +50,9 @@ COURSE_UPDATE_RESPONSE = {
     "episodes": [], 
     **DATA_CHANGED_COURSE
     }
+
+
+EPISODE_ID = 1
+
+EPISODE_DETAIL_PATH = reverse("episode-detail", kwargs={"pk": EPISODE_ID})
+EPISODES_LIST_PATH = reverse("episode-list")
