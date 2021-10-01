@@ -23,3 +23,12 @@ def three_courses_fixture():
 @pytest.fixture
 def episode_fixture():
     return EpisodeFactory(id=values.EPISODE_ID)
+
+
+@pytest.fixture
+def three_episodes_fixture():
+    text_fields = {
+        "title": values.EPISODE_TITLE,
+        "video_url": values.EPISODE_VIDEO_URL}
+    episodes = [EpisodeFactory(id=id, **text_fields) for id in values.EPISODES_IDS]
+    return episodes
