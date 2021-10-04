@@ -43,4 +43,4 @@ def test_episode_model_without_course_raises_exception():
         ):
 
         # WHEN
-        Episode.objects.create(title="test title", video_url="www.test.pl")
+        Episode.objects.create()

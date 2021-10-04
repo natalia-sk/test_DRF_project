@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.test import APIClient
 
-from courses.models import Course, Episode
+from courses.models import Episode
 from courses.serializers import EpisodeSerializer
 from courses.tests import values
 from courses.views import EpisodeViewSet
@@ -25,7 +25,7 @@ def test_episode_detail(user_fixture, episode_fixture):
     # GIVEN
     episode = Episode.objects.get()
     client = get_client(user_fixture)
-    data_check = {
+    expected_data = {
         "url": f"http://testserver/courses/episodes/{episode.id}", 
         "id": episode.id,
         "title": episode.title,
@@ -38,7 +38,7 @@ def test_episode_detail(user_fixture, episode_fixture):
 
     # THEN
     assert request.status_code == status.HTTP_200_OK
-    assert request.data == data_check
+    assert request.data == expected_data
 
 
 @pytest.mark.django_db
