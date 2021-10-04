@@ -26,7 +26,7 @@ def test_course_detail(user_fixture, course_fixture):
     # GIVEN
     course = Course.objects.get()
     client = get_client(user_fixture)
-    data_check = {
+    expected_data = {
         "url": f"http://testserver/courses/courses/{course.id}", 
         "id": course.id,
         "title": course.title,
@@ -40,7 +40,7 @@ def test_course_detail(user_fixture, course_fixture):
 
     # THEN
     assert request.status_code == status.HTTP_200_OK
-    assert request.data == data_check
+    assert request.data == expected_data
 
 
 @pytest.mark.django_db
@@ -56,7 +56,7 @@ def test_unauthenticated_user_cannot_access_courses_view(user_fixture):
     assert request.status_code == status.HTTP_403_FORBIDDEN
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(reset_sequences=True)
 def test_create_course(user_fixture):
     
     # GIVEN
