@@ -6,7 +6,7 @@ from courses.models import Course
 
 
 @pytest.mark.django_db
-def test_course_model_raises_exception():
+def test_course_title_max_length():
 
     # THEN
     with pytest.raises(
