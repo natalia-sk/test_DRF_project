@@ -1,7 +1,7 @@
 import pytest
 
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.test import APIClient
 
 from courses.models import Course
