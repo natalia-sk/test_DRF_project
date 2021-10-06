@@ -60,6 +60,7 @@ def test_course_detail(user_fixture, course_fixture):
     assert request.data == expected_data
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     argnames=["url", "http_method", "expected_status_code"],
     argvalues=[
@@ -95,7 +96,6 @@ def test_course_detail(user_fixture, course_fixture):
         ),
     ],
 )
-@pytest.mark.django_db
 def test_unauthenticated_user_accesses(user_fixture, url, http_method, expected_status_code):
 
     # GIVEN
