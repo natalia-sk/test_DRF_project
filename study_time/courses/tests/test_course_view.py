@@ -1,40 +1,14 @@
 import pytest
 
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.test import APIClient
 
 from courses.models import Course
-from courses.serializers import CourseSerializer
 from courses.tests import values
 from courses.views import CourseViewSet
 
 from tests.utils import get_client
-
-
-def test_course_view_serialzier_class():
-    assert CourseViewSet.serializer_class == CourseSerializer
-
-
-@pytest.mark.parametrize(
-    argnames=["action", "expected_permission"],
-    argvalues=[
-        pytest.param(
-            "list",
-            [AllowAny],
-            id="list",
-        ),
-    ],
-)
-def test_course_view_permission_classes(action, expected_permission):
-
-    # GIVEN
-    course_viewset = CourseViewSet()
-    course_viewset.action = action
-    permissions = [type(permission) for permission in course_viewset.get_permissions()]
-
-    # THEN
-    assert permissions == expected_permission
 
 
 @pytest.mark.django_db
@@ -60,6 +34,28 @@ def test_course_detail(user_fixture, course_fixture):
     assert request.data == expected_data
 
 
+@pytest.mark.parametrize(
+    argnames=["action", "expected_permission"],
+    argvalues=[
+        pytest.param("list", [IsAuthenticated], id="list"),
+        pytest.param("create", [IsAuthenticated], id="create"),
+        pytest.param("retrieve", [IsAuthenticated], id="retrieve"),
+        pytest.param("update", [IsAuthenticated], id="update"),
+        pytest.param("partial_update", [IsAuthenticated], id="partial-update"),
+        pytest.param("destroy", [IsAuthenticated], id="destroy"),
+    ],
+)
+def test_course_view_permission_classes(action, expected_permission):
+
+    # GIVEN
+    course_viewset = CourseViewSet()
+    course_viewset.action = action
+    permissions = [type(permission) for permission in course_viewset.get_permissions()]
+
+    # THEN
+    assert permissions == expected_permission
+
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     argnames=["url", "http_method", "expected_status_code"],
@@ -67,7 +63,7 @@ def test_course_detail(user_fixture, course_fixture):
         pytest.param(
             values.COURSES_LIST_PATH,
             "get",
-            status.HTTP_200_OK,
+            status.HTTP_403_FORBIDDEN,
             id="list",
         ),
         pytest.param(
@@ -96,7 +92,9 @@ def test_course_detail(user_fixture, course_fixture):
         ),
     ],
 )
-def test_unauthenticated_user_accesses(user_fixture, url, http_method, expected_status_code):
+def test_course_unauthenticated_user_accesses(
+    user_fixture, url, http_method, expected_status_code
+):
 
     # GIVEN
     client = APIClient(user_fixture)
