@@ -5,19 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.test import APIClient
 
 from courses.models import Episode
-from courses.serializers import EpisodeSerializer
 from courses.tests import values
 from courses.views import EpisodeViewSet
+
 from tests.utils import get_client
 
-
-def test_episode_view_serialzier_class():
-    assert EpisodeViewSet.serializer_class == EpisodeSerializer
-
-
-def test_episode_view_permission_classes():
-    assert EpisodeViewSet.permission_classes == [IsAuthenticated]
-    
 
 @pytest.mark.django_db
 def test_episode_detail(user_fixture, episode_fixture):
@@ -26,11 +18,11 @@ def test_episode_detail(user_fixture, episode_fixture):
     episode = Episode.objects.get()
     client = get_client(user_fixture)
     expected_data = {
-        "url": f"http://testserver/courses/episodes/{episode.id}", 
+        "url": f"http://testserver/courses/episodes/{episode.id}",
         "id": episode.id,
         "title": episode.title,
         "video_url": episode.video_url,
-        "course": episode.course.id
+        "course": episode.course.id,
     }
 
     # WHEN
@@ -41,22 +33,82 @@ def test_episode_detail(user_fixture, episode_fixture):
     assert request.data == expected_data
 
 
+@pytest.mark.parametrize(
+    argnames=["action", "expected_permission"],
+    argvalues=[
+        pytest.param("list",[IsAuthenticated], id="list"),
+        pytest.param("create",[IsAuthenticated], id="create"),
+        pytest.param("retrieve",[IsAuthenticated], id="retrieve"),
+        pytest.param("update",[IsAuthenticated], id="update"),
+        pytest.param("partial_update",[IsAuthenticated], id="partial-update"),
+        pytest.param("destroy",[IsAuthenticated], id="destroy"),
+    ],
+)
+def test_episode_view_permission_classes(action, expected_permission):
+
+    # GIVEN
+    episode_viewset = EpisodeViewSet()
+    episode_viewset.action = action
+    permissions = [type(permission) for permission in episode_viewset.get_permissions()]
+
+    # THEN
+    assert permissions == expected_permission
+
+
 @pytest.mark.django_db
-def test_unauthenticated_user_cannot_access_episodes_view(user_fixture):
+@pytest.mark.parametrize(
+    argnames=["url", "http_method", "expected_status_code"],
+    argvalues=[
+        pytest.param(
+            values.EPISODES_LIST_PATH,
+            "get",
+            status.HTTP_403_FORBIDDEN,
+            id="list",
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH,
+            "get",
+            status.HTTP_403_FORBIDDEN,
+            id="detail-view",
+        ),
+        pytest.param(
+            values.EPISODES_LIST_PATH,
+            "post",
+            status.HTTP_403_FORBIDDEN,
+            id="create",
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH,
+            "put",
+            status.HTTP_403_FORBIDDEN,
+            id="update",
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH,
+            "delete",
+            status.HTTP_403_FORBIDDEN,
+            id="delete",
+        ),
+    ],
+)
+def test_episode_unauthenticated_user_accesses(
+    user_fixture, url, http_method, expected_status_code
+):
 
     # GIVEN
     client = APIClient(user_fixture)
 
     # WHEN
-    request = client.get(values.EPISODES_LIST_PATH)
+    request_function = getattr(client, http_method)
+    response = request_function(url)
 
     # THEN
-    assert request.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == expected_status_code
 
 
 @pytest.mark.django_db(reset_sequences=True)
 def test_create_episode(user_fixture, course_fixture):
-    
+
     # GIVEN
     client = get_client(user_fixture)
     data = values.DATA_NEW_EPISODE
@@ -71,7 +123,7 @@ def test_create_episode(user_fixture, course_fixture):
 
 @pytest.mark.django_db(reset_sequences=True)
 def test_list_episodes(user_fixture, three_episodes_fixture):
-    
+
     # GIVEN
     client = get_client(user_fixture)
 
@@ -85,17 +137,13 @@ def test_list_episodes(user_fixture, three_episodes_fixture):
 
 @pytest.mark.django_db
 def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
-    
+
     # GIVEN
     client = get_client(user_fixture)
     new_data = values.DATA_CHANGED_EPISODE
 
     # WHEN
-    response = client.put(
-        path=values.EPISODE_DETAIL_PATH,
-        data=new_data,
-        format="json"
-    )
+    response = client.put(path=values.EPISODE_DETAIL_PATH, data=new_data, format="json")
 
     # THEN
     assert response.status_code == status.HTTP_200_OK
@@ -104,7 +152,7 @@ def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
 
 @pytest.mark.django_db
 def test_delete_episode(user_fixture, episode_fixture):
-    
+
     # GIVEN
     client = get_client(user_fixture)
 
