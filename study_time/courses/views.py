@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Course, Episode
@@ -16,8 +15,3 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["language"]
-
-    def get_permissions(self):
-        if self.action == "list":
-            return [AllowAny()]
-        return super().get_permissions()
