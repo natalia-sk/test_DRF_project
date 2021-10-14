@@ -2,7 +2,6 @@ import pytest
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.test import APIClient
 
 from courses.models import Course
 from courses.tests import values
@@ -16,7 +15,7 @@ def test_course_detail(user_fixture, course_fixture):
 
     # GIVEN
     course = Course.objects.get()
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     expected_data = {
         "url": f"http://testserver/courses/courses/{course.id}",
         "id": course.id,
@@ -32,6 +31,7 @@ def test_course_detail(user_fixture, course_fixture):
     # THEN
     assert request.status_code == status.HTTP_200_OK
     assert request.data == expected_data
+
 
 
 @pytest.mark.parametrize(
@@ -60,44 +60,18 @@ def test_course_view_permission_classes(action, expected_permission):
 @pytest.mark.parametrize(
     argnames=["url", "http_method", "expected_status_code"],
     argvalues=[
-        pytest.param(
-            values.COURSES_LIST_PATH,
-            "get",
-            status.HTTP_403_FORBIDDEN,
-            id="list",
-        ),
-        pytest.param(
-            values.COURSE_DETAIL_PATH,
-            "get",
-            status.HTTP_403_FORBIDDEN,
-            id="detail-view",
-        ),
-        pytest.param(
-            values.COURSES_LIST_PATH,
-            "post",
-            status.HTTP_403_FORBIDDEN,
-            id="create",
-        ),
-        pytest.param(
-            values.COURSE_DETAIL_PATH,
-            "put",
-            status.HTTP_403_FORBIDDEN,
-            id="update",
-        ),
-        pytest.param(
-            values.COURSE_DETAIL_PATH,
-            "delete",
-            status.HTTP_403_FORBIDDEN,
-            id="delete",
-        ),
+        pytest.param(values.COURSES_LIST_PATH, "get", status.HTTP_403_FORBIDDEN, id="list"),
+        pytest.param(values.COURSE_DETAIL_PATH, "get", status.HTTP_403_FORBIDDEN, id="detail-view"),
+        pytest.param(values.COURSES_LIST_PATH, "post", status.HTTP_403_FORBIDDEN, id="create"),
+        pytest.param(values.COURSE_DETAIL_PATH, "put", status.HTTP_403_FORBIDDEN, id="update"),
+        pytest.param(values.COURSE_DETAIL_PATH, "patch", status.HTTP_403_FORBIDDEN, id="partial-update"),
+        pytest.param(values.COURSE_DETAIL_PATH, "delete", status.HTTP_403_FORBIDDEN, id="delete"),
     ],
 )
-def test_course_unauthenticated_user_accesses(
-    user_fixture, url, http_method, expected_status_code
-):
+def test_course_unauthenticated_user_accesses(url, http_method, expected_status_code):
 
     # GIVEN
-    client = APIClient(user_fixture)
+    client = get_client()  # unauthenticated user
 
     # WHEN
     request_function = getattr(client, http_method)
@@ -111,7 +85,7 @@ def test_course_unauthenticated_user_accesses(
 def test_create_course(user_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     data = values.DATA_NEW_COURSE
 
     # WHEN
@@ -126,7 +100,7 @@ def test_create_course(user_fixture):
 def test_list_curses(user_fixture, three_courses_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
 
     # WHEN
     response = client.get(values.COURSES_LIST_PATH)
@@ -140,7 +114,7 @@ def test_list_curses(user_fixture, three_courses_fixture):
 def test_update_course(user_fixture, course_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     new_data = values.DATA_CHANGED_COURSE
 
     # WHEN
@@ -155,7 +129,7 @@ def test_update_course(user_fixture, course_fixture):
 def test_delete_course(user_fixture, course_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
 
     # WHEN
     response = client.delete(path=values.COURSE_DETAIL_PATH)

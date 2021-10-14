@@ -2,7 +2,6 @@ import pytest
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.test import APIClient
 
 from courses.models import Episode
 from courses.tests import values
@@ -16,7 +15,7 @@ def test_episode_detail(user_fixture, episode_fixture):
 
     # GIVEN
     episode = Episode.objects.get()
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     expected_data = {
         "url": f"http://testserver/courses/episodes/{episode.id}",
         "id": episode.id,
@@ -59,44 +58,18 @@ def test_episode_view_permission_classes(action, expected_permission):
 @pytest.mark.parametrize(
     argnames=["url", "http_method", "expected_status_code"],
     argvalues=[
-        pytest.param(
-            values.EPISODES_LIST_PATH,
-            "get",
-            status.HTTP_403_FORBIDDEN,
-            id="list",
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH,
-            "get",
-            status.HTTP_403_FORBIDDEN,
-            id="detail-view",
-        ),
-        pytest.param(
-            values.EPISODES_LIST_PATH,
-            "post",
-            status.HTTP_403_FORBIDDEN,
-            id="create",
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH,
-            "put",
-            status.HTTP_403_FORBIDDEN,
-            id="update",
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH,
-            "delete",
-            status.HTTP_403_FORBIDDEN,
-            id="delete",
-        ),
+        pytest.param(values.EPISODES_LIST_PATH, "get", status.HTTP_403_FORBIDDEN, id="list"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "get", status.HTTP_403_FORBIDDEN, id="detail-view"),
+        pytest.param(values.EPISODES_LIST_PATH, "post", status.HTTP_403_FORBIDDEN, id="create"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "put", status.HTTP_403_FORBIDDEN, id="update"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "patch", status.HTTP_403_FORBIDDEN, id="partial-update"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "delete", status.HTTP_403_FORBIDDEN, id="delete"),
     ],
 )
-def test_episode_unauthenticated_user_accesses(
-    user_fixture, url, http_method, expected_status_code
-):
+def test_episode_unauthenticated_user_accesses(url, http_method, expected_status_code):
 
     # GIVEN
-    client = APIClient(user_fixture)
+    client = get_client()  # unauthenticated user
 
     # WHEN
     request_function = getattr(client, http_method)
@@ -110,7 +83,7 @@ def test_episode_unauthenticated_user_accesses(
 def test_create_episode(user_fixture, course_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     data = values.DATA_NEW_EPISODE
 
     # WHEN
@@ -125,7 +98,7 @@ def test_create_episode(user_fixture, course_fixture):
 def test_list_episodes(user_fixture, three_episodes_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
 
     # WHEN
     response = client.get(values.EPISODES_LIST_PATH)
@@ -139,7 +112,7 @@ def test_list_episodes(user_fixture, three_episodes_fixture):
 def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
     new_data = values.DATA_CHANGED_EPISODE
 
     # WHEN
@@ -154,7 +127,7 @@ def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
 def test_delete_episode(user_fixture, episode_fixture):
 
     # GIVEN
-    client = get_client(user_fixture)
+    client = get_client(user_fixture)  # authenticated user
 
     # WHEN
     response = client.delete(path=values.EPISODE_DETAIL_PATH)
