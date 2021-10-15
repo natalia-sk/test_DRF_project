@@ -1,26 +1,32 @@
 import pytest
-from django.db.utils import DataError
 
-from articles.models import Article
-from courses.models import Course, Episode
+from articles.tests.factories import ArticleFactory
+from notifications.models import Notification
 
 
 @pytest.mark.django_db
-def test_notification_signal_shorten_too_long_instance_title():
-    try:
-        course = Course.objects.create(
-            title="c" * 150,
-            video_duration=123,
-            language="en",
-        )
-        Episode.objects.create(
-            title="e" * 150,
-            video_url="http://test.com",
-            course_id=course.id,
-        )
-        Article.objects.create(
-            title="a" * 150,
-            content="test content",
-        )
-    except DataError as e:
-        pytest.fail(f"Unexpected DataError: {e}...")
+@pytest.mark.parametrize(
+    argnames=["instance_title", "expected_notification_title"],
+    argvalues=[
+        pytest.param(
+            "e" * 150,
+            f"New article: {'e'*100}...",
+            id="title-longer-than-100-characters",
+        ),
+        pytest.param(
+            "e" * 100,
+            f"New article: {'e'*100}",
+            id="title-max-100-characters",
+        ),
+    ],
+)
+def test_notification_signal_article(instance_title, expected_notification_title):
+    # GIVEN
+    ArticleFactory(title=instance_title)
+    notification = Notification.objects.get()
+
+    # THEN
+    assert notification.title == expected_notification_title
+    assert notification.body == f"Hey, there's a new article: {instance_title}"
+    assert notification.content_type == "Article"
+    assert Notification.objects.all().count() == 1
