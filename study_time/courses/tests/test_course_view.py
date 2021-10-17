@@ -12,16 +12,14 @@ from tests.utils import get_client
 
 @pytest.mark.django_db
 def test_course_detail(user_fixture, course_fixture):
-
     # GIVEN
-    course = Course.objects.get()
     client = get_client(user_fixture)  # authenticated user
     expected_data = {
-        "url": f"http://testserver/courses/courses/{course.id}",
-        "id": course.id,
-        "title": course.title,
-        "video_duration": course.video_duration,
-        "language": course.language,
+        "url": f"http://testserver/courses/courses/{values.COURSE_ID}",
+        "id": values.COURSE_ID,
+        "title": values.COURSE_TITLE,
+        "video_duration": values.COURSE_VIDEO_DURATION,
+        "language": values.COURSE_LANGUAGE,
         "episodes": [],
     }
 
@@ -31,7 +29,6 @@ def test_course_detail(user_fixture, course_fixture):
     # THEN
     assert request.status_code == status.HTTP_200_OK
     assert request.data == expected_data
-
 
 
 @pytest.mark.parametrize(
@@ -46,7 +43,6 @@ def test_course_detail(user_fixture, course_fixture):
     ],
 )
 def test_course_view_permission_classes(action, expected_permission):
-
     # GIVEN
     course_viewset = CourseViewSet()
     course_viewset.action = action
@@ -69,7 +65,6 @@ def test_course_view_permission_classes(action, expected_permission):
     ],
 )
 def test_course_unauthenticated_user_accesses(url, http_method, expected_status_code):
-
     # GIVEN
     client = get_client()  # unauthenticated user
 
@@ -83,7 +78,6 @@ def test_course_unauthenticated_user_accesses(url, http_method, expected_status_
 
 @pytest.mark.django_db(reset_sequences=True)
 def test_create_course(user_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
     data = values.DATA_NEW_COURSE
@@ -98,7 +92,6 @@ def test_create_course(user_fixture):
 
 @pytest.mark.django_db
 def test_list_curses(user_fixture, three_courses_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
 
@@ -112,7 +105,6 @@ def test_list_curses(user_fixture, three_courses_fixture):
 
 @pytest.mark.django_db
 def test_update_course(user_fixture, course_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
     new_data = values.DATA_CHANGED_COURSE
@@ -127,7 +119,6 @@ def test_update_course(user_fixture, course_fixture):
 
 @pytest.mark.django_db
 def test_delete_course(user_fixture, course_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
 

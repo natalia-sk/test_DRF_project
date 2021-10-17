@@ -4,43 +4,42 @@ import re
 from django.db.utils import DataError, IntegrityError
 from courses.models import Episode
 from courses.tests import values
-from .factories import CourseFactory
 
 
 @pytest.mark.django_db
-def test_episode_model_too_long_title_raises_exception(course_fixture):
-
-    # THEN
-    with pytest.raises(
-        DataError, 
-        match=re.escape("value too long for type character varying(150)")
-        ):
-
-        # WHEN
-        Episode.objects.create(title="s" * 151, video_url="www.test.pl", course_id=values.COURSE_ID)
-
-
-@pytest.mark.django_db
-def test_episode_model_too_long_video_url_raises_exception(course_fixture):
-
+@pytest.mark.parametrize(
+    argnames=["max_length", "episode_data"],
+    argvalues=[
+        pytest.param(
+            150,
+            {"title": "t" * 151, "video_url": "www.test.pl"},
+            id="too-long-title",
+        ),
+        pytest.param(
+            200,
+            {"title": "test title", "video_url": f"www.{'s' * 194}.pl"},
+            id="too-long-video-url",
+        ),
+    ],
+)
+def test_episode_fields_max_length(course_fixture, max_length, episode_data):
     # THEN
     with pytest.raises(
         DataError,
-        match=re.escape("value too long for type character varying(200)")
-        ):
-        
+        match=re.escape(f"value too long for type character varying({max_length})"),
+    ):
+
         # WHEN
-        Episode.objects.create(title="test title", video_url=f"www.{'s' * 194}.pl", course_id=values.COURSE_ID)
+        Episode.objects.create(**episode_data, course_id=values.COURSE_ID)
 
 
 @pytest.mark.django_db
 def test_episode_model_without_course_raises_exception():
-
     # THEN
     with pytest.raises(
-        IntegrityError, 
-        match='null value in column "course_id" violates not-null constraint'
-        ):
+        IntegrityError,
+        match='null value in column "course_id" violates not-null constraint',
+    ):
 
         # WHEN
         Episode.objects.create()
