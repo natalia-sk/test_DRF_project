@@ -76,7 +76,7 @@ EPISODES_RESPONSE = {
         "id": episode_id,
         "title": EPISODE_TITLE,
         "video_url": EPISODE_VIDEO_URL,
-        "course": course_id} for episode_id, course_id in zip(EPISODES_IDS, COURSES_IDS)
+        "course": COURSE_ID} for episode_id in EPISODES_IDS
     ]
 }
 

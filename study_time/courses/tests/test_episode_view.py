@@ -12,16 +12,14 @@ from tests.utils import get_client
 
 @pytest.mark.django_db
 def test_episode_detail(user_fixture, episode_fixture):
-
     # GIVEN
-    episode = Episode.objects.get()
     client = get_client(user_fixture)  # authenticated user
     expected_data = {
-        "url": f"http://testserver/courses/episodes/{episode.id}",
-        "id": episode.id,
-        "title": episode.title,
-        "video_url": episode.video_url,
-        "course": episode.course.id,
+        "url": f"http://testserver/courses/episodes/{values.EPISODE_ID}",
+        "id": values.EPISODE_ID,
+        "title": values.EPISODE_TITLE,
+        "video_url": values.EPISODE_VIDEO_URL,
+        "course": values.COURSE_ID,
     }
 
     # WHEN
@@ -44,7 +42,6 @@ def test_episode_detail(user_fixture, episode_fixture):
     ],
 )
 def test_episode_view_permission_classes(action, expected_permission):
-
     # GIVEN
     episode_viewset = EpisodeViewSet()
     episode_viewset.action = action
@@ -67,7 +64,6 @@ def test_episode_view_permission_classes(action, expected_permission):
     ],
 )
 def test_episode_unauthenticated_user_accesses(url, http_method, expected_status_code):
-
     # GIVEN
     client = get_client()  # unauthenticated user
 
@@ -81,7 +77,6 @@ def test_episode_unauthenticated_user_accesses(url, http_method, expected_status
 
 @pytest.mark.django_db(reset_sequences=True)
 def test_create_episode(user_fixture, course_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
     data = values.DATA_NEW_EPISODE
@@ -96,7 +91,6 @@ def test_create_episode(user_fixture, course_fixture):
 
 @pytest.mark.django_db(reset_sequences=True)
 def test_list_episodes(user_fixture, three_episodes_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
 
@@ -110,7 +104,6 @@ def test_list_episodes(user_fixture, three_episodes_fixture):
 
 @pytest.mark.django_db
 def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
     new_data = values.DATA_CHANGED_EPISODE
@@ -125,7 +118,6 @@ def test_update_episode(user_fixture, episode_fixture, three_courses_fixture):
 
 @pytest.mark.django_db
 def test_delete_episode(user_fixture, episode_fixture):
-
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
 

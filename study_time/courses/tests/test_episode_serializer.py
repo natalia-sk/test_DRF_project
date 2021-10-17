@@ -2,7 +2,6 @@ from courses.serializers import EpisodeSerializer
 
 
 def test_episode_serializer_contains_expected_fields():
-
     # GIVEN
     serializer = EpisodeSerializer()
 
