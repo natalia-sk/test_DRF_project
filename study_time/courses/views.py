@@ -8,7 +8,8 @@ from .serializers import CourseSerializer, EpisodeSerializer
 
 class EpisodeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = EpisodeSerializer
-    queryset = Episode.objects.all()  #get_queryset
+    queryset = Episode.objects.all()
+
 
 class CourseViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = CourseSerializer
