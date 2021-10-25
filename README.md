@@ -14,6 +14,7 @@ Project is created with:
 * Django 3.2.6
 * Django Rest Framework 3.12.4
 * django-filter 2.4.0
+* drf-extensions 0.7.1
 	
 ## Local Setup
 1) Create virtual environment  
@@ -26,5 +27,3 @@ Project is created with:
 `python manage.py migrate`
 5) Create an admin user  
 `python manage.py createsuperuser`
-6) Run the file :)  
-`python manage.py runserver`
