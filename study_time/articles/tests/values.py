@@ -3,7 +3,7 @@ from django.urls import reverse
 
 ARTICLE_ID = 1
 
-ARTICLES_IDS = [i for i in range(1,4)]
+ARTICLES_IDS = [1, 2, 3]
 ARTICLE_TITLE = "Some title, only for tests."
 ARTICLE_CONTENT = "A little longer text, only for tests"
 
