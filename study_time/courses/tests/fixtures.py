@@ -22,7 +22,7 @@ def three_courses_fixture(course_fixture):
         "video_duration": values.COURSE_VIDEO_DURATION,
         "language": values.COURSE_LANGUAGE,
     }
-    courses += [CourseFactory(id=id, **text_fields) for id in values.COURSES_IDS[1:]]
+    courses += [CourseFactory(id=id, **text_fields) for id in values.COURSES_IDS[1:3]]
     return courses
 
 
@@ -42,5 +42,5 @@ def three_episodes_fixture(episode_fixture, course_fixture):
     text_fields = {
         "title": values.EPISODE_TITLE,
         "video_url": values.EPISODE_VIDEO_URL}
-    episodes += [EpisodeFactory(id=id, course=course_fixture, **text_fields) for id in values.EPISODES_IDS[1:]]
+    episodes += [EpisodeFactory(id=id, course=course_fixture, **text_fields) for id in values.EPISODES_IDS[1:3]]
     return episodes
