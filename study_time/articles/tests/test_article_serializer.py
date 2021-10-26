@@ -2,7 +2,6 @@ from articles.serializers import ArticleSerializer
 
 
 def test_serializer_contains_expected_fields():
-
     # GIVEN
     serializer = ArticleSerializer()
 
