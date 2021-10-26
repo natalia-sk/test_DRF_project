@@ -14,6 +14,11 @@ from tests.utils import get_client
 def test_course_detail(user_fixture, course_fixture):
     # GIVEN
     client = get_client(user_fixture)  # authenticated user
+    
+    # WHEN
+    request = client.get(values.COURSE_DETAIL_PATH)
+
+    # THEN
     expected_data = {
         "url": f"http://testserver/courses/courses/{values.COURSE_ID}",
         "id": values.COURSE_ID,
@@ -22,11 +27,7 @@ def test_course_detail(user_fixture, course_fixture):
         "language": values.COURSE_LANGUAGE,
         "episodes": [],
     }
-
-    # WHEN
-    request = client.get(values.COURSE_DETAIL_PATH)
-
-    # THEN
+    
     assert request.status_code == status.HTTP_200_OK
     assert request.data == expected_data
 
