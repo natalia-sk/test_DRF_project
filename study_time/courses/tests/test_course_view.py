@@ -20,7 +20,6 @@ def test_course_detail(user_fixture, course_fixture):
 
     # THEN
     expected_data = {
-        "url": f"http://testserver/courses/courses/{values.COURSE_ID}",
         "id": values.COURSE_ID,
         "title": values.COURSE_TITLE,
         "video_duration": values.COURSE_VIDEO_DURATION,
