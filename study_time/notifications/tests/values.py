@@ -1,0 +1,38 @@
+from django.urls import reverse
+
+from courses.tests import values as course_values
+
+NOTIFICATION_ID = 1
+NOTIFICATIONS_IDS = [1, 2, 3]
+
+# NOTIFICATION_TITLE = ""
+# NOTIFICATION_BODY = ""
+# NOTIFICATION_CONTENT_TYPE = ""
+
+NOTIFICATION_DETAIL_PATH = reverse(
+    "notification-detail", kwargs={"pk": NOTIFICATION_ID}
+)
+NOTIFICATIONS_LIST_PATH = reverse("notification-list")
+
+
+# after using "three_courses_fixture"
+NOTIFICATIONS_RESPONSE = {
+    "count": 3,
+    "next": None,
+    "previous": None,
+    "results": [
+        {
+            "id": notification_id,
+            "title": f"New course: {course_values.COURSE_TITLE}",
+            "body": f"Hey, there's a new course: {course_values.COURSE_TITLE} ({course_values.COURSE_VIDEO_DURATION}s)",
+            "content_type": "Course",
+            "article": None,
+            "course": course_id,
+            "episode": None,
+        }
+        for notification_id, course_id in zip(
+            NOTIFICATIONS_IDS, course_values.COURSES_IDS
+        )
+    ],
+}
+
