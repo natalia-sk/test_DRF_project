@@ -1,6 +1,7 @@
 import pytest
 import re
 
+from django.db import models
 from django.db.utils import DataError
 
 from notifications.models import Notification
@@ -24,3 +25,21 @@ def test_notification_fields_max_length(max_length, notification_data):
         # WHEN
         Notification.objects.create(**notification_data)
 
+
+def test_notification_model_fields():
+    # GIVEN
+    fields = Notification._meta.get_fields()
+    fields_dict = {field.name: type(field) for field in fields}
+
+    # THEN
+    expected_data = {
+        "id": models.AutoField,
+        "title": models.CharField,
+        "body": models.TextField,
+        "content_type": models.CharField,
+        "article": models.ForeignKey,
+        "course": models.ForeignKey,
+        "episode": models.ForeignKey,
+    }
+
+    assert fields_dict == expected_data
