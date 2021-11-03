@@ -69,8 +69,8 @@ def test_course_model_fields():
         "title": models.CharField,
         "video_duration": models.PositiveIntegerField,
         "language": models.CharField,
-        "episodes": models.fields.reverse_related.ManyToOneRel,
-        "notification": models.fields.reverse_related.ManyToOneRel,
+        "episodes": models.ManyToOneRel,
+        "notification": models.ManyToOneRel,
     }
 
     assert fields_dict == expected_data
