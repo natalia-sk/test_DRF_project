@@ -28,7 +28,7 @@ def test_article_model_fields():
         "id": models.AutoField,
         "title": models.CharField,
         "content": models.TextField,
-        "notification": models.fields.reverse_related.ManyToOneRel,
+        "notification": models.ManyToOneRel,
     }
 
     assert fields_dict == expected_data
