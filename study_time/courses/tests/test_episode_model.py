@@ -58,7 +58,7 @@ def test_episode_model_fields():
         "title": models.CharField,
         "video_url": models.URLField,
         "course": models.ForeignKey,
-        "notification": models.fields.reverse_related.ManyToOneRel,
+        "notification": models.ManyToOneRel,
     }
 
     assert fields_dict == expected_data
