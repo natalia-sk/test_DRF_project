@@ -3,11 +3,8 @@ from django.urls import reverse
 from courses.tests import values as course_values
 
 NOTIFICATION_ID = 1
-NOTIFICATIONS_IDS = [1, 2, 3]
-
-# NOTIFICATION_TITLE = ""
-# NOTIFICATION_BODY = ""
-# NOTIFICATION_CONTENT_TYPE = ""
+THREE_NOTIFICATIONS_IDS = [2, 3]
+NOTIFICATIONS_IDS = [NOTIFICATION_ID] + THREE_NOTIFICATIONS_IDS
 
 NOTIFICATION_DETAIL_PATH = reverse(
     "notification-detail", kwargs={"pk": NOTIFICATION_ID}
@@ -35,4 +32,3 @@ NOTIFICATIONS_RESPONSE = {
         )
     ],
 }
-
