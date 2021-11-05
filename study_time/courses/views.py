@@ -9,6 +9,7 @@ from .serializers import CourseSerializer, EpisodeSerializer
 class EpisodeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = EpisodeSerializer
     queryset = Episode.objects.all()
+    course_id_lookup = "parent_lookup_course_id"
 
 
 class CourseViewSet(NestedViewSetMixin, viewsets.ModelViewSet):

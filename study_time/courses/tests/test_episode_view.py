@@ -23,7 +23,6 @@ def test_episode_detail(user_fixture, episode_fixture):
         "id": values.EPISODE_ID,
         "title": values.EPISODE_TITLE,
         "video_url": values.EPISODE_VIDEO_URL,
-        "course": values.COURSE_ID,
     }
 
     assert request.status_code == status.HTTP_200_OK
