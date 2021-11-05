@@ -8,7 +8,6 @@ from notifications.tests import values
 from notifications.views import NotificationViewSet
 from tests.utils import get_client
 
-from articles.models import Article
 from articles.tests import values as article_values
 from courses.tests import values as course_values
 
