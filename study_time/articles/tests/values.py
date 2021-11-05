@@ -2,8 +2,8 @@ from django.urls import reverse
 
 
 ARTICLE_ID = 1
-THREE_ARTICLES_IDS = [2, 3]
-ARTICLES_IDS = [ARTICLE_ID] + THREE_ARTICLES_IDS
+ARTICLES_IDS_2ND_3RD = [2, 3]
+ARTICLES_IDS = [ARTICLE_ID] + ARTICLES_IDS_2ND_3RD
 
 ARTICLE_TITLE = "Some title, only for tests."
 ARTICLE_CONTENT = "A little longer text, only for tests"
