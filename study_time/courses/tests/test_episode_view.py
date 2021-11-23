@@ -64,7 +64,7 @@ def test_episode_view_permission_classes(action):
         pytest.param(values.EPISODE_DETAIL_PATH, "delete", id="delete"),
     ],
 )
-def test_episode_unauthenticated_user_accesses(url, http_method):
+def test_episode_endpoints_forbidden_for_anonymous(url, http_method):
     # GIVEN
     client = get_client()  # unauthenticated user
 
