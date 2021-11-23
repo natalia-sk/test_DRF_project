@@ -70,7 +70,7 @@ def test_notification_view_permission_classes(action):
         pytest.param(values.NOTIFICATION_DETAIL_PATH, "delete", id="delete"),
     ],
 )
-def test_notification_unauthenticated_user_accesses(url, http_method):
+def test_notification_endpoints_forbidden_for_anonymous(url, http_method):
     # GIVEN
     client = get_client()  # unauthenticated user
 
