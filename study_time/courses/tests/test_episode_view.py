@@ -23,6 +23,7 @@ def test_episode_detail(user_fixture, episode_fixture):
         "id": values.EPISODE_ID,
         "title": values.EPISODE_TITLE,
         "video_url": values.EPISODE_VIDEO_URL,
+        "course": values.COURSE_ID,
     }
 
     assert request.status_code == status.HTTP_200_OK
@@ -32,12 +33,12 @@ def test_episode_detail(user_fixture, episode_fixture):
 @pytest.mark.parametrize(
     argnames=["action", "expected_permission"],
     argvalues=[
-        pytest.param("list",[IsAuthenticated], id="list"),
-        pytest.param("create",[IsAuthenticated], id="create"),
-        pytest.param("retrieve",[IsAuthenticated], id="retrieve"),
-        pytest.param("update",[IsAuthenticated], id="update"),
-        pytest.param("partial_update",[IsAuthenticated], id="partial-update"),
-        pytest.param("destroy",[IsAuthenticated], id="destroy"),
+        pytest.param("list", [IsAuthenticated], id="list"),
+        pytest.param("create", [IsAuthenticated], id="create"),
+        pytest.param("retrieve", [IsAuthenticated], id="retrieve"),
+        pytest.param("update", [IsAuthenticated], id="update"),
+        pytest.param("partial_update", [IsAuthenticated], id="partial-update"),
+        pytest.param("destroy", [IsAuthenticated], id="destroy"),
     ],
 )
 def test_episode_view_permission_classes(action, expected_permission):
@@ -54,12 +55,30 @@ def test_episode_view_permission_classes(action, expected_permission):
 @pytest.mark.parametrize(
     argnames=["url", "http_method", "expected_status_code"],
     argvalues=[
-        pytest.param(values.EPISODES_LIST_PATH, "get", status.HTTP_403_FORBIDDEN, id="list"),
-        pytest.param(values.EPISODE_DETAIL_PATH, "get", status.HTTP_403_FORBIDDEN, id="detail-view"),
-        pytest.param(values.EPISODES_LIST_PATH, "post", status.HTTP_403_FORBIDDEN, id="create"),
-        pytest.param(values.EPISODE_DETAIL_PATH, "put", status.HTTP_403_FORBIDDEN, id="update"),
-        pytest.param(values.EPISODE_DETAIL_PATH, "patch", status.HTTP_403_FORBIDDEN, id="partial-update"),
-        pytest.param(values.EPISODE_DETAIL_PATH, "delete", status.HTTP_403_FORBIDDEN, id="delete"),
+        pytest.param(
+            values.EPISODES_LIST_PATH, "get", status.HTTP_403_FORBIDDEN, id="list"
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH,
+            "get",
+            status.HTTP_403_FORBIDDEN,
+            id="detail-view",
+        ),
+        pytest.param(
+            values.EPISODES_LIST_PATH, "post", status.HTTP_403_FORBIDDEN, id="create"
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH, "put", status.HTTP_403_FORBIDDEN, id="update"
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH,
+            "patch",
+            status.HTTP_403_FORBIDDEN,
+            id="partial-update",
+        ),
+        pytest.param(
+            values.EPISODE_DETAIL_PATH, "delete", status.HTTP_403_FORBIDDEN, id="delete"
+        ),
     ],
 )
 def test_episode_unauthenticated_user_accesses(url, http_method, expected_status_code):
