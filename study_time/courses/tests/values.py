@@ -68,6 +68,7 @@ EPISODES_RESPONSE = {
             "id": episode_id,
             "title": EPISODE_TITLE,
             "video_url": EPISODE_VIDEO_URL,
+            "course": COURSE_ID,
         }
         for episode_id in EPISODES_IDS
     ],
@@ -76,13 +77,12 @@ EPISODES_RESPONSE = {
 DATA_NEW_EPISODE = {
     "title": "test episode title",
     "video_url": "http://test-episode.com",
-    "course_id": COURSE_ID,
+    "course": COURSE_ID,
 }
 
 NEW_EPISODE_RESPONSE = {
     "id": EPISODE_ID,
-    "title": DATA_NEW_EPISODE["title"],
-    "video_url": DATA_NEW_EPISODE["video_url"]
+    **DATA_NEW_EPISODE,
 }
 
 DATA_CHANGED_EPISODE = {
@@ -93,6 +93,5 @@ DATA_CHANGED_EPISODE = {
 
 EPISODE_UPDATE_RESPONSE = {
     "id": EPISODE_ID,
-    "title": DATA_CHANGED_EPISODE["title"],
-    "video_url": DATA_CHANGED_EPISODE["video_url"]
+    **DATA_CHANGED_EPISODE,
 }

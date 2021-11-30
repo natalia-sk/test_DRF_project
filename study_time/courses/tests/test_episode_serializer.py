@@ -9,4 +9,4 @@ def test_episode_serializer_contains_expected_fields():
     serializer_fields = serializer.fields
 
     # THEN
-    assert set(serializer_fields.keys()) == set(["id", "title", "video_url"])
+    assert set(serializer_fields.keys()) == {"id", "title", "video_url", "course"}
