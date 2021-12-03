@@ -10,8 +10,6 @@ COURSE_TITLE = "Some title, only for tests."
 COURSE_VIDEO_DURATION = 123
 COURSE_LANGUAGE = "en"
 
-COURSE_TESTSERVER_URL = f"http://testserver/courses/courses/{COURSE_ID}"
-
 COURSE_DETAIL_PATH = reverse("course-detail", kwargs={"pk": COURSE_ID})
 COURSES_LIST_PATH = reverse("course-list")
 
@@ -21,7 +19,6 @@ COURSES_RESPONSE = {
     "previous": None,
     "results": [
         {
-            "url": f"http://testserver/courses/courses/{course_id}",
             "id": course_id,
             "title": COURSE_TITLE,
             "video_duration": COURSE_VIDEO_DURATION,
@@ -38,12 +35,7 @@ DATA_NEW_COURSE = {
     "language": "fr",
 }
 
-NEW_COURSE_RESPONSE = {
-    "id": COURSE_ID,
-    "url": COURSE_TESTSERVER_URL,
-    "episodes": [],
-    **DATA_NEW_COURSE,
-}
+NEW_COURSE_RESPONSE = {"id": COURSE_ID, "episodes": [], **DATA_NEW_COURSE}
 
 DATA_CHANGED_COURSE = {
     "title": "test new course title",
@@ -51,12 +43,7 @@ DATA_CHANGED_COURSE = {
     "language": "ru",
 }
 
-COURSE_UPDATE_RESPONSE = {
-    "id": COURSE_ID,
-    "url": COURSE_TESTSERVER_URL,
-    "episodes": [],
-    **DATA_CHANGED_COURSE,
-}
+COURSE_UPDATE_RESPONSE = {"id": COURSE_ID, "episodes": [], **DATA_CHANGED_COURSE}
 
 # EPISODES
 EPISODE_ID = 1
@@ -66,10 +53,12 @@ EPISODES_IDS = [EPISODE_ID] + EPISODES_IDS_2ND_3RD
 EPISODE_TITLE = "Some title, only for tests."
 EPISODE_VIDEO_URL = "http://test-episode-url.com"
 
-EPISODE_TESTSERVER_URL = f"http://testserver/courses/episodes/{EPISODE_ID}"
-
-EPISODE_DETAIL_PATH = reverse("episode-detail", kwargs={"pk": EPISODE_ID})
-EPISODES_LIST_PATH = reverse("episode-list")
+EPISODE_DETAIL_PATH = reverse(
+    "episode-detail", kwargs={"parent_lookup_course_id": COURSE_ID, "pk": EPISODE_ID}
+)
+EPISODES_LIST_PATH = reverse(
+    "episode-list", kwargs={"parent_lookup_course_id": COURSE_ID}
+)
 
 EPISODES_RESPONSE = {
     "count": 3,
@@ -77,7 +66,6 @@ EPISODES_RESPONSE = {
     "previous": None,
     "results": [
         {
-            "url": f"http://testserver/courses/episodes/{episode_id}",
             "id": episode_id,
             "title": EPISODE_TITLE,
             "video_url": EPISODE_VIDEO_URL,
@@ -95,7 +83,6 @@ DATA_NEW_EPISODE = {
 
 NEW_EPISODE_RESPONSE = {
     "id": EPISODE_ID,
-    "url": EPISODE_TESTSERVER_URL,
     **DATA_NEW_EPISODE,
 }
 
@@ -107,6 +94,5 @@ DATA_CHANGED_EPISODE = {
 
 EPISODE_UPDATE_RESPONSE = {
     "id": EPISODE_ID,
-    "url": EPISODE_TESTSERVER_URL,
     **DATA_CHANGED_EPISODE,
 }

@@ -1,7 +1,9 @@
 import pytest
 import re
 
+from django.db import models
 from django.db.utils import DataError, IntegrityError
+
 from courses.models import Course
 from courses.tests import values
 
@@ -54,3 +56,21 @@ def test_course_video_duration_not_null():
 
         # WHEN
         Course.objects.create()
+
+
+def test_course_model_fields():
+    # GIVEN
+    fields = Course._meta.get_fields()
+    fields_dict = {field.name: type(field) for field in fields}
+
+    # THEN
+    expected_data = {
+        "id": models.AutoField,
+        "title": models.CharField,
+        "video_duration": models.PositiveIntegerField,
+        "language": models.CharField,
+        "episodes": models.ManyToOneRel,
+        "notification": models.ManyToOneRel,
+    }
+
+    assert fields_dict == expected_data

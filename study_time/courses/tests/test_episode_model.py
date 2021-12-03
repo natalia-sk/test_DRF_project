@@ -1,7 +1,9 @@
 import pytest
 import re
 
+from django.db import models
 from django.db.utils import DataError, IntegrityError
+
 from courses.models import Episode
 from courses.tests import values
 
@@ -43,3 +45,20 @@ def test_episode_model_without_course_raises_exception():
 
         # WHEN
         Episode.objects.create()
+
+
+def test_episode_model_fields():
+    # GIVEN
+    fields = Episode._meta.get_fields()
+    fields_dict = {field.name: type(field) for field in fields}
+
+    # THEN
+    expected_data = {
+        "id": models.AutoField,
+        "title": models.CharField,
+        "video_url": models.URLField,
+        "course": models.ForeignKey,
+        "notification": models.ManyToOneRel,
+    }
+
+    assert fields_dict == expected_data
