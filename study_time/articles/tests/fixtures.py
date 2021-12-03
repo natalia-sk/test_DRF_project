@@ -17,8 +17,10 @@ def article_fixture():
 def three_articles_fixture(article_fixture):
     articles = [article_fixture]
     text_fields = {
-        "title": values.ARTICLE_TITLE, 
+        "title": values.ARTICLE_TITLE,
         "content": values.ARTICLE_CONTENT,
     }
-    articles += [ArticleFactory(id=id, **text_fields) for id in values.ARTICLES_IDS[1:3]]
+    articles += [
+        ArticleFactory(id=id, **text_fields) for id in values.ARTICLES_IDS[1:3]
+    ]
     return articles

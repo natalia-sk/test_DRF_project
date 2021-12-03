@@ -7,33 +7,50 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('courses', '0001_initial'),
+        ("courses", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='course',
-            name='id',
-            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="course",
+            name="id",
+            field=models.AutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
         migrations.AlterField(
-            model_name='course',
-            name='language',
-            field=models.CharField(choices=[('English', 'En'), ('Russian', 'Ru'), ('German', 'De'), ('French', 'Fr')], default='en', max_length=10),
+            model_name="course",
+            name="language",
+            field=models.CharField(
+                choices=[
+                    ("English", "En"),
+                    ("Russian", "Ru"),
+                    ("German", "De"),
+                    ("French", "Fr"),
+                ],
+                default="en",
+                max_length=10,
+            ),
         ),
         migrations.AlterField(
-            model_name='course',
-            name='video_duration',
-            field=models.PositiveIntegerField(help_text='in seconds'),
+            model_name="course",
+            name="video_duration",
+            field=models.PositiveIntegerField(help_text="in seconds"),
         ),
         migrations.AlterField(
-            model_name='episode',
-            name='course',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='episodes', to='courses.course'),
+            model_name="episode",
+            name="course",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="episodes",
+                to="courses.course",
+            ),
         ),
         migrations.AlterField(
-            model_name='episode',
-            name='id',
-            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="episode",
+            name="id",
+            field=models.AutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
     ]
