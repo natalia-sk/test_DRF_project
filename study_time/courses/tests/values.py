@@ -1,9 +1,10 @@
 from django.urls import reverse
 
+
 # COURSES
 COURSE_ID = 1
-
-COURSES_IDS = [1, 2, 3]
+COURSES_IDS_2ND_3RD = [2, 3]
+COURSES_IDS = [COURSE_ID] + COURSES_IDS_2ND_3RD
 
 COURSE_TITLE = "Some title, only for tests."
 COURSE_VIDEO_DURATION = 123
@@ -46,8 +47,8 @@ COURSE_UPDATE_RESPONSE = {"id": COURSE_ID, "episodes": [], **DATA_CHANGED_COURSE
 
 # EPISODES
 EPISODE_ID = 1
-
-EPISODES_IDS = [1, 2, 3]
+EPISODES_IDS_2ND_3RD = [2, 3]
+EPISODES_IDS = [EPISODE_ID] + EPISODES_IDS_2ND_3RD
 
 EPISODE_TITLE = "Some title, only for tests."
 EPISODE_VIDEO_URL = "http://test-episode-url.com"

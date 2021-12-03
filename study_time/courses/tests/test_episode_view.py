@@ -31,57 +31,39 @@ def test_episode_detail(user_fixture, episode_fixture):
 
 
 @pytest.mark.parametrize(
-    argnames=["action", "expected_permission"],
+    argnames=["action"],
     argvalues=[
-        pytest.param("list", [IsAuthenticated], id="list"),
-        pytest.param("create", [IsAuthenticated], id="create"),
-        pytest.param("retrieve", [IsAuthenticated], id="retrieve"),
-        pytest.param("update", [IsAuthenticated], id="update"),
-        pytest.param("partial_update", [IsAuthenticated], id="partial-update"),
-        pytest.param("destroy", [IsAuthenticated], id="destroy"),
+        pytest.param("list", id="list"),
+        pytest.param("create", id="create"),
+        pytest.param("retrieve", id="retrieve"),
+        pytest.param("update", id="update"),
+        pytest.param("partial_update", id="partial-update"),
+        pytest.param("destroy", id="destroy"),
     ],
 )
-def test_episode_view_permission_classes(action, expected_permission):
+def test_episode_view_permission_classes(action):
     # GIVEN
     episode_viewset = EpisodeViewSet()
     episode_viewset.action = action
     permissions = [type(permission) for permission in episode_viewset.get_permissions()]
 
     # THEN
-    assert permissions == expected_permission
+    assert permissions == [IsAuthenticated]
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    argnames=["url", "http_method", "expected_status_code"],
+    argnames=["url", "http_method"],
     argvalues=[
-        pytest.param(
-            values.EPISODES_LIST_PATH, "get", status.HTTP_403_FORBIDDEN, id="list"
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH,
-            "get",
-            status.HTTP_403_FORBIDDEN,
-            id="detail-view",
-        ),
-        pytest.param(
-            values.EPISODES_LIST_PATH, "post", status.HTTP_403_FORBIDDEN, id="create"
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH, "put", status.HTTP_403_FORBIDDEN, id="update"
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH,
-            "patch",
-            status.HTTP_403_FORBIDDEN,
-            id="partial-update",
-        ),
-        pytest.param(
-            values.EPISODE_DETAIL_PATH, "delete", status.HTTP_403_FORBIDDEN, id="delete"
-        ),
+        pytest.param(values.EPISODES_LIST_PATH, "get", id="list"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "get", id="detail-view"),
+        pytest.param(values.EPISODES_LIST_PATH, "post", id="create"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "put", id="update"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "patch", id="partial-update"),
+        pytest.param(values.EPISODE_DETAIL_PATH, "delete", id="delete"),
     ],
 )
-def test_episode_unauthenticated_user_accesses(url, http_method, expected_status_code):
+def test_episode_endpoints_forbidden_for_anonymous(url, http_method):
     # GIVEN
     client = get_client()  # unauthenticated user
 
@@ -90,7 +72,7 @@ def test_episode_unauthenticated_user_accesses(url, http_method, expected_status
     response = request_function(url)
 
     # THEN
-    assert response.status_code == expected_status_code
+    assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
 @pytest.mark.django_db(reset_sequences=True)
