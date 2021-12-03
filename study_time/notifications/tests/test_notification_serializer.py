@@ -12,4 +12,3 @@ def test_notification_serializer_contains_expected_fields():
     assert set(serializer_fields.keys()) == set(
         ["id", "title", "body", "content_type", "article", "course", "episode"]
     )
-

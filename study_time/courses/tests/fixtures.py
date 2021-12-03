@@ -31,16 +31,17 @@ def episode_fixture(course_fixture):
     return EpisodeFactory(
         id=values.EPISODE_ID,
         title=values.EPISODE_TITLE,
-        video_url = values.EPISODE_VIDEO_URL,
-        course = course_fixture,
+        video_url=values.EPISODE_VIDEO_URL,
+        course=course_fixture,
     )
 
 
 @pytest.fixture
 def three_episodes_fixture(episode_fixture, course_fixture):
     episodes = [episode_fixture]
-    text_fields = {
-        "title": values.EPISODE_TITLE,
-        "video_url": values.EPISODE_VIDEO_URL}
-    episodes += [EpisodeFactory(id=id, course=course_fixture, **text_fields) for id in values.EPISODES_IDS[1:3]]
+    text_fields = {"title": values.EPISODE_TITLE, "video_url": values.EPISODE_VIDEO_URL}
+    episodes += [
+        EpisodeFactory(id=id, course=course_fixture, **text_fields)
+        for id in values.EPISODES_IDS[1:3]
+    ]
     return episodes
